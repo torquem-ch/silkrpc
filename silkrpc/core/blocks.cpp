@@ -16,6 +16,7 @@
 
 #include "blocks.hpp"
 
+#include <silkrpc/common/log.hpp>
 #include <silkrpc/stagedsync/stages.hpp>
 
 namespace silkrpc::core {
@@ -36,7 +37,9 @@ asio::awaitable<uint64_t> get_current_block_number(const core::rawdb::DatabaseRe
 }
 
 asio::awaitable<uint64_t> get_latest_block_number(const core::rawdb::DatabaseReader& reader) {
+    SILKRPC_TRACE << "silkrpc::core::get_latest_block_number reader: " << &reader << "\n";
     const auto latest_block_number = co_await stages::get_sync_stage_progress(reader, stages::kExecution);
+    SILKRPC_TRACE << "silkrpc::core::get_latest_block_number latest_block_number: " << latest_block_number << "\n";
     co_return latest_block_number;
 }
 

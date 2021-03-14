@@ -33,6 +33,7 @@
 
 #include <silkworm/common/util.hpp>
 #include <silkrpc/common/constants.hpp>
+#include <silkrpc/common/log.hpp>
 #include <silkrpc/common/util.hpp>
 #include <silkrpc/ethdb/kv/async_close_cursor.hpp>
 #include <silkrpc/ethdb/kv/async_close.hpp>
@@ -285,7 +286,9 @@ struct KvAsioAwaitable {
     typedef Executor executor_type;
 
     explicit KvAsioAwaitable(asio::io_context& context, ClientCallbackReactor& reactor)
-    : context_(context), reactor_(reactor) {}
+    : context_(context), reactor_(reactor) {
+        SILKRPC_TRACE << "KvAsioAwaitable::KvAsioAwaitable reactor: " << &reactor << "\n";
+    }
 
     template<typename WaitHandler>
     auto async_open_cursor(const std::string& table_name, WaitHandler&& handler) {

@@ -68,7 +68,9 @@ asio::awaitable<void> EthereumRpcApi::handle_eth_get_logs(const nlohmann::json& 
     std::vector<Log> logs;
 
     auto tx = database_->begin();
+    SILKRPC_TRACE << "tx: " << tx.get() << "\n";
     ethdb::kv::TransactionDatabase tx_database{*tx};
+    SILKRPC_TRACE << "tx_database: " << &tx_database << "\n";
 
     try {
         uint64_t start{}, end{};
@@ -86,6 +88,7 @@ asio::awaitable<void> EthereumRpcApi::handle_eth_get_logs(const nlohmann::json& 
             start = end = block_number;
         } else {
             auto latest_block_number = co_await core::get_latest_block_number(tx_database);
+            SILKRPC_DEBUG << "latest_block_number: " << latest_block_number << "\n";
             start = filter.from_block.value_or(latest_block_number);
             end = filter.to_block.value_or(latest_block_number);
         }

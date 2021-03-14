@@ -25,6 +25,7 @@
 
 #include <asio/use_awaitable.hpp>
 
+#include <silkrpc/common/log.hpp>
 #include <silkrpc/ethdb/kv/awaitables.hpp>
 #include <silkrpc/ethdb/kv/cursor.hpp>
 #include <silkrpc/ethdb/kv/remote_cursor.hpp>
@@ -38,7 +39,9 @@ using namespace silkworm;
 class RemoteTransaction : public Transaction {
 public:
     explicit RemoteTransaction(asio::io_context& context, std::shared_ptr<grpc::Channel> channel)
-    : context_(context), reactor_{channel}, kv_awaitable_{context_, reactor_} {}
+    : context_(context), reactor_{channel}, kv_awaitable_{context_, reactor_} {
+        SILKRPC_TRACE << "RemoteTransaction::RemoteTransaction reactor: " << &reactor_ << " kv_awaitable: " << &kv_awaitable_ << "\n";
+    }
 
     std::unique_ptr<Cursor> cursor() override {
         return std::make_unique<RemoteCursor>(kv_awaitable_);

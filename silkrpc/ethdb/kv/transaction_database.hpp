@@ -21,6 +21,7 @@
 
 #include <string>
 
+#include <silkrpc/common/log.hpp>
 #include <silkworm/common/util.hpp>
 #include <silkrpc/core/rawdb/accessors.hpp>
 
@@ -28,7 +29,9 @@ namespace silkrpc::ethdb::kv {
 
 class TransactionDatabase : public core::rawdb::DatabaseReader {
 public:
-    TransactionDatabase(kv::Transaction& tx) : tx_(tx) {}
+    TransactionDatabase(kv::Transaction& tx) : tx_(tx) {
+        SILKRPC_TRACE << "TransactionDatabase::TransactionDatabase tx: " << &tx << "\n";
+    }
 
     TransactionDatabase(const TransactionDatabase&) = delete;
     TransactionDatabase& operator=(const TransactionDatabase&) = delete;
